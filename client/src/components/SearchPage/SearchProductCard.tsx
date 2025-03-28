@@ -1,5 +1,5 @@
 
-import { IonCard, IonCardContent, IonLabel, IonImg, IonCardTitle, IonButton } from '@ionic/react/dist/types';
+import { IonCard, IonCardContent, IonLabel, IonImg, IonCardTitle, IonButton } from '@ionic/react';
 import { QuantityControls } from '../../components/SearchPage/QuantityControls';
 import { Product } from '../../types/product';
 
@@ -40,11 +40,11 @@ export function SearchProductCard(this: any, {
             />
 
             <IonCardContent>
-                <div>
-                    <IonCardTitle className="one-line-title" onClick={() => openProductDetails(product)}>
-                        {productName}
-                    </IonCardTitle>
-                </div>
+            <div>
+                <IonCardTitle className="one-line-title" onClick={() => openProductDetails(product)}>
+                    {productName}
+                </IonCardTitle>
+             </div>
                 <div className="productDetails">
 
                     <div>

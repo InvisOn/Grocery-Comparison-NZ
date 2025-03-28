@@ -1,4 +1,4 @@
-import { IonLabel, IonIcon } from '@ionic/react/dist/types';
+import { IonLabel, IonIcon } from '@ionic/react';
 import { syncOutline } from 'ionicons/icons';
 
 export function LoadingContainer() {

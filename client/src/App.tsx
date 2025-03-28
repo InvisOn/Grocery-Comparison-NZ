@@ -7,8 +7,8 @@ import '@ionic/react/css/structure.css';
 import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/typography.css';
-import { IonApp, IonRouterOutlet, IonTabs, setupIonicReact } from '@ionic/react/dist/types';
-import { IonReactRouter } from '@ionic/react-router/dist/types';
+import { IonApp, IonRouterOutlet, IonTabs, setupIonicReact } from '@ionic/react';
+import { IonReactRouter } from '@ionic/react-router';
 
 /**
  * Ionic Dark Mode
