@@ -1,4 +1,4 @@
-import { IonIcon, IonLabel, IonTabBar, IonTabButton } from "@ionic/react";
+import { IonIcon, IonLabel, IonTabBar, IonTabButton } from "@ionic/react/dist/types";
 import { search, list, storefront, settings, informationCircleOutline } from "ionicons/icons";
 
 const BottomNavigationBar: React.FC = () => (

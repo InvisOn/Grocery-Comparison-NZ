@@ -1,4 +1,4 @@
-import { IonButton, IonIcon } from '@ionic/react';
+import { IonButton, IonIcon } from '@ionic/react/dist/types';
 import { arrowForward, arrowBack } from 'ionicons/icons';
 
 interface PaginationControls {

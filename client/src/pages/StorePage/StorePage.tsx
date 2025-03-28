@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { star, storefrontOutline } from 'ionicons/icons';
 import './StorePage.css';
 import { getChains, getStores } from '../../services/StoreService';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton, IonList, IonItem, IonCheckbox, IonLabel, IonTabBar, IonTabButton, IonToast } from '@ionic/react';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton, IonList, IonItem, IonCheckbox, IonLabel, IonTabBar, IonTabButton, IonToast } from '@ionic/react/dist/types';
 
 const StorePage: React.FC = () => {
     const [chains, setChains] = useState<Chain[]>([]);
