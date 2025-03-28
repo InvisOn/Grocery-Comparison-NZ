@@ -1,7 +1,168 @@
-include:
-  - ./server/docker-compose-db.yml
-  - ./server/docker-compose-db-migrate.yml
-  # - ./server/docker-compose-drizzlestudio.yml
-  - ./server/docker-compose-server.yml
-  # - ./server/docker-compose-pgadmin.yml
-  - ./client/docker-compose-client.yml
+#   TODO: remove .env from repo and update the README on secrets
+services:
+  db:
+    container_name: db
+    profiles:
+      - backend
+      - e2e_test
+    tty: true
+    image: postgres:17.2
+    restart: always
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 1s
+      timeout: 10s
+      retries: 5
+    env_file:
+      - ./server/.env
+    volumes:
+      - grocery-compare-db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - project_network
+
+  server:
+    container_name: server
+    profiles:
+      - backend
+      - e2e_test
+    tty: true
+    build:
+      context: server
+      dockerfile: Dockerfile
+    develop:
+      watch:
+        - action: rebuild
+          path: ./src
+          target: ./src
+          ignore:
+            - node_modules/
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://server:5000"]
+      interval: 1s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - ./src:/src
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./server/.env
+    networks:
+      - project_network
+
+  test_server:
+    container_name: test_server
+    profiles:
+      - backend_test
+    tty: true
+    develop:
+      watch:
+        - action: rebuild
+          path: ./tests/
+          target: ./tests/
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./src
+          target: ./src
+          ignore:
+            - node_modules/
+    build:
+      context: server
+      dockerfile: Dockerfile
+    env_file:
+      - ./server/.env.e2e
+    command: sh -c "rm -rf dist && npm run tests"
+    volumes:
+      - ./src:/src
+    networks:
+      - project_network
+
+  web_scraper:
+    profiles:
+      - scraper
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web_scraper
+    volumes:
+      - ./src/web-scraping:/src/web-scraping
+    env_file:
+      - ./server/.env
+    command: ["npm", "run", "scrape"]
+    networks:
+      - project_network
+
+  client:
+    container_name: client
+    profiles:
+      - frontend
+      - e2e_test
+    tty: true
+    build:
+      context: client
+      dockerfile: Dockerfile
+    develop:
+      watch:
+        - action: rebuild
+          path: ./src
+          target: ./src
+          ignore:
+            - node_modules/
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://client:5173"]
+      interval: 1s
+      timeout: 10s
+      retries: 3
+    env_file:
+      - ./client/.env
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./src:/src
+    networks:
+      - project_network
+
+  e2e_test:
+    container_name: e2e_test
+    profiles:
+      - e2e_test
+    tty: true
+    build:
+      context: client
+      dockerfile: Dockerfile.e2e
+    develop:
+      watch:
+        - action: rebuild
+          path: ./src
+          target: ./src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ../server/src
+          target: ../server/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./cypress/e2e
+          target: ./cypress/e2e
+          ignore:
+            - node_modules/
+    depends_on:
+      db:
+        condition: service_healthy
+      client:
+          condition: service_healthy
+    working_dir : /e2e
+    volumes:
+      - ./client:/e2e
+    networks:
+      - project_network
+
+volumes:
+  grocery-compare-db:
+
+networks:
+  project_network:
