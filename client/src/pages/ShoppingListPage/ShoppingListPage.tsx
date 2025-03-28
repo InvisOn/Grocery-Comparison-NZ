@@ -3,7 +3,7 @@ import {
     IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonLabel, IonButton, IonItem, IonSelect, IonImg,
     IonSelectOption, IonModal,
     IonButtons
-} from '@ionic/react';
+} from '@ionic/react/dist/types';
 import { getSearch } from '../../services/InitialSetupService';
 import { SearchProductCard } from '../../components/SearchPage/SearchProductCard';
 import { ProductDetailsModal } from '../../components/ProductPage/ProductDetailsModal';
@@ -126,8 +126,8 @@ const ShoppingListPage: React.FC = () => {
         // If no store was selected in StorePage, show all possible store records
         if (selectedStoreIds.length === 0) {
             return products.filter(
-              (prod) =>
-                 prod.store_products.productID === product.store_products.productID
+                (prod) =>
+                    prod.store_products.productID === product.store_products.productID
             );
         }
         // Otherwise only show records from the user-chosen storeIDs

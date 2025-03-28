@@ -1,5 +1,5 @@
-import { IonList, IonItem, IonCol, IonRow, IonButton, IonImg } from '@ionic/react';
-import { Line } from 'react-chartjs-2';
+import { IonList, IonItem, IonCol, IonRow, IonButton, IonImg } from '@ionic/react/dist/types';
+import { Line } from 'react-chartjs-2/src';
 import { useState, useEffect } from 'react';
 import { Product } from '../../types/product';
 import { getPriceHistory } from '../../services/InitialSetupService';
@@ -87,14 +87,14 @@ export function PriceHistory({ allPrices }: PriceHistory) {
     const options = {
         plugins: {
             tooltip: {
-              callbacks: {
-                label: function (context: { chart?: any; raw?: any; datasetIndex?: any; dataIndex?: any; }) {
-                    const { dataIndex } = context;
-                    const storeName = filteredPriceHistory[dataIndex]?.storeName;
-                    const price = context.raw;
-                    return `${storeName}: $${price}`;
+                callbacks: {
+                    label: function(context: { chart?: any; raw?: any; datasetIndex?: any; dataIndex?: any; }) {
+                        const { dataIndex } = context;
+                        const storeName = filteredPriceHistory[dataIndex]?.storeName;
+                        const price = context.raw;
+                        return `${storeName}: $${price}`;
+                    },
                 },
-              },
             },
             scales: {
                 x: {
@@ -109,15 +109,15 @@ export function PriceHistory({ allPrices }: PriceHistory) {
                         text: 'Price ($)',
                     },
                     ticks: {
-                        beginAtZero: false, 
-                        callback: function (value: number) {
-                            return '$' + value.toFixed(2); 
+                        beginAtZero: false,
+                        callback: function(value: number) {
+                            return '$' + value.toFixed(2);
                         }
                     },
                 },
             }
-          },
-        };
+        },
+    };
 
     return (
         <div>
