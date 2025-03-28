@@ -3,7 +3,7 @@ import Account from "../pages/AccountPage/AccountPage";
 import Search from "../pages/SearchPage/SearchPage";
 import ShoppingList from "../pages/ShoppingListPage/ShoppingListPage";
 import Store from "../pages/StorePage/StorePage"
-import { IonRouterOutlet } from "@ionic/react/dist/types";
+import { IonRouterOutlet } from "@ionic/react";
 import { Redirect, Route } from "react-router";
 
 

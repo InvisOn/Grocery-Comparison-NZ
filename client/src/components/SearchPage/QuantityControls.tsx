@@ -1,4 +1,4 @@
-import { IonIcon, IonButton } from '@ionic/react/dist/types';
+import { IonIcon, IonButton } from '@ionic/react';
 import { add, remove } from 'ionicons/icons';
 import { Product } from "../../types/product"
 

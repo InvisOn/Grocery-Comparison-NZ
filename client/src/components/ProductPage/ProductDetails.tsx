@@ -1,4 +1,4 @@
-import { IonLabel, IonImg, IonRow, IonButton } from '@ionic/react/dist/types';
+import { IonLabel, IonImg, IonRow, IonButton } from '@ionic/react';
 import { QuantityControls } from '../../components/SearchPage/QuantityControls';
 import { Product } from '../../types/product';
 
