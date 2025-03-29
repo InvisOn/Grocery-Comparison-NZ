@@ -1,7 +1,10 @@
 #   TODO: remove .env from repo and update the README on secrets
 services:
   db:
-    container_name: db
+    container_name: db_pg
+    build:
+      context: ./server/Docker
+      dockerfile: pgsql.Dockerfile
     profiles:
       - backend
       - e2e_test
@@ -16,7 +19,7 @@ services:
     env_file:
       - ./server/.env
     volumes:
-      - grocery-compare-db:/var/lib/postgresql/data
+      - ./var/pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
@@ -24,13 +27,14 @@ services:
 
   server:
     container_name: server
+    command: npx nodemon --legacy-watch src/server.ts
     profiles:
       - backend
       - e2e_test
     tty: true
     build:
       context: server
-      dockerfile: Dockerfile
+      dockerfile: Docker/server.Dockerfile
     develop:
       watch:
         - action: rebuild
@@ -151,7 +155,7 @@ services:
           ignore:
             - node_modules/
     depends_on:
-      db:
+      db_pg:
         condition: service_healthy
       client:
           condition: service_healthy
