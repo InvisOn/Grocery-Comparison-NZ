@@ -1,6 +1,9 @@
 import { defineConfig } from "drizzle-kit";
 
 
+// NEXT_ACTION: fix connection issue between db and server: sudo docker compose --profile backend up
+// set password for grocery_compare
+// TODO: better secret management: https://docs.docker.com/engine/swarm/secrets/
 const env = process.env["NODE_ENV"]!
 const dbUrl = process.env[`${env.toUpperCase()}_DATABASE_URL`];
 
