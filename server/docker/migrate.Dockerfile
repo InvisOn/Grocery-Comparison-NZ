@@ -2,11 +2,9 @@ FROM node:latest
 
 WORKDIR /server
 
-COPY package*.json ./
+COPY package.json .
 
 RUN npm install
-
-RUN npx playwright install --with-deps
 
 COPY . .
 

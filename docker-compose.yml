@@ -6,9 +6,9 @@ networks:
 
 services:
   db:
-    container_name: db_pg
+    container_name: db
     build:
-      context: ./server/Docker
+      context: ./server/docker
       dockerfile: pgsql.Dockerfile
     profiles:
       - backend
@@ -17,7 +17,7 @@ services:
     restart: always
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "grocery_compare"]
-      interval: 10s
+      interval: 1s
       start_interval: 1s
       timeout: 10s
       retries: 5
@@ -28,26 +28,20 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - project_network #  TODO: rename to something more better
+      - project_network
 
-  #  TODO: improve this, rework dockerfile so no playwright
-  db_migrate:
-    container_name: db_migrate
+  migrate:
+    container_name: migrate
+    profiles:
+      - migrate
     tty: true
-    # command: sh -c 'npm run db:drop && npm run db:create && npm run db:generate && npm run db:push && npm run db:seed'
-    develop:
-      watch:
-        - action: rebuild
-          path: ./src
-          target: ./src
-          ignore:
-            - node_modules/
+    command: npx drizzle-kit push --config ./drizzle.config.ts
     depends_on:
-      db_pg:
+      db:
         condition: service_healthy
     build:
-      context: server
-      dockerfile: Dockerfile
+      context: ./server
+      dockerfile: ./docker/server.Dockerfile
     env_file:
       - ./server/.env
     networks:
@@ -58,14 +52,17 @@ services:
     command: npx ts-node ./src/app.ts
     profiles:
       - backend
-      - e2e_test
+      - e2e_tes
+    depends_on:
+      db:
+        condition: service_healthy
     tty: true
     build:
-      context: server
-      dockerfile: Docker/server.Dockerfile
+      context: ./server
+      dockerfile: docker/server.Dockerfile
     develop:
       watch:
-        - action: rebuild
+        - action: sync+restart
           path: ./server/src
           target: ./server/src
           ignore:
@@ -183,7 +180,7 @@ services:
           ignore:
             - node_modules/
     depends_on:
-      db_pg:
+      db:
         condition: service_healthy
       client:
           condition: service_healthy
