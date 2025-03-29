@@ -27,18 +27,6 @@ const options = {
 
 const specs = swaggerJsdoc(options)
 
-app.use(cors())
-app.use(bodyParser.json())
-app.use(
-    bodyParser.urlencoded({
-        extended: true,
-    })
-)
-
-db.execute("SELECT NOW()")
-    .then(() => console.log("Database connection is successful"))
-    .catch((err) => console.error("Database connection check failed:", err))
-
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs))
 
 app.use("/",
@@ -49,7 +37,19 @@ app.use("/",
     priceHistoryRouter
 )
 
+app.use(cors())
+app.use(bodyParser.json())
+app.use(
+    bodyParser.urlencoded({
+        extended: true,
+    })
+)
+
 app.use(errorHandler)
+
+db.execute("SELECT NOW()")
+    .then(() => console.log("Database connection is successful"))
+    .catch((err) => console.error("Database connection check failed:", err))
 
 const PORT = Number(process.env["PORT"])
 
