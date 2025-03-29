@@ -51,4 +51,16 @@ app.use("/",
 
 app.use(errorHandler)
 
-export default app
+const PORT = Number(process.env["PORT"])
+
+let server = app.listen(PORT, "0.0.0.0", () => {
+    console.log("Server is running in environment:", process.env["NODE_ENV"])
+    console.log(`Server is running on port ${PORT}`)
+})
+
+process.on("SIGTERM", () => {
+    console.log("SIGTERM signal received: closing HTTP server")
+    server.close(() => {
+        console.log("HTTP server closed")
+    })
+})

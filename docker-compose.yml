@@ -1,4 +1,9 @@
-#   TODO: remove .env from repo and update the README on secrets
+volumes:
+  grocery_data:
+
+networks:
+  project_network:
+
 services:
   db:
     container_name: db_pg
@@ -9,25 +14,48 @@ services:
       - backend
       - e2e_test
     tty: true
-    image: postgres:17.2
     restart: always
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
-      interval: 1s
+      test: ["CMD", "pg_isready", "-U", "grocery_compare"]
+      interval: 10s
+      start_interval: 1s
       timeout: 10s
       retries: 5
     env_file:
       - ./server/.env
     volumes:
-      - ./var/pgdata:/var/lib/postgresql/data
+      - grocery_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - project_network #  TODO: rename to something more better
+
+  #  TODO: improve this, rework dockerfile so no playwright
+  db_migrate:
+    container_name: db_migrate
+    tty: true
+    # command: sh -c 'npm run db:drop && npm run db:create && npm run db:generate && npm run db:push && npm run db:seed'
+    develop:
+      watch:
+        - action: rebuild
+          path: ./src
+          target: ./src
+          ignore:
+            - node_modules/
+    depends_on:
+      db_pg:
+        condition: service_healthy
+    build:
+      context: server
+      dockerfile: Dockerfile
+    env_file:
+      - ./server/.env
     networks:
       - project_network
 
   server:
     container_name: server
-    command: npx nodemon --legacy-watch src/server.ts
+    command: npx ts-node ./src/app.ts
     profiles:
       - backend
       - e2e_test
@@ -38,8 +66,8 @@ services:
     develop:
       watch:
         - action: rebuild
-          path: ./src
-          target: ./src
+          path: ./server/src
+          target: ./server/src
           ignore:
             - node_modules/
     healthcheck:
@@ -164,9 +192,3 @@ services:
       - ./client:/e2e
     networks:
       - project_network
-
-volumes:
-  grocery-compare-db:
-
-networks:
-  project_network:
