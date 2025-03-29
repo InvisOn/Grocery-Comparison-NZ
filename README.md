@@ -1,6 +1,8 @@
-# Grocery Comparison App
+# Grocery Comparison NZ
 
 A simple grocery comparison app to help users find the best prices for their grocery items across multiple supermarkets.
+
+
 
 This project was developed in cooperation with Haosheng Ye, Mohammad Munem, Nandhini Sambasivam, Sam Williams, and Yuchuan Jin.
 
@@ -11,26 +13,14 @@ This project was developed in cooperation with Haosheng Ye, Mohammad Munem, Nand
 
 # Building and Running
 
-Prerequisites:
-
-- TODO: update this
-
 This project uses docker compose for development, testing, and production.
-
-Run the following commands:
-
-```
-cd client
-npm install
-cd ../server
-npm install
-```
 
 Then to launch a specific backend and the frontend: `sudo docker compose --profile <profile> up`. See [Docker profiles docs](https://docs.docker.com/compose/how-tos/profiles/) for more information.
 
 Available profiles:
 
 - `backend`
+- `migrate`
 - `frontend`
 - `scraper`
 - `backend_test`
