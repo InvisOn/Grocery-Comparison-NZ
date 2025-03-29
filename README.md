@@ -4,7 +4,16 @@ A simple grocery comparison app to help users find the best prices for their gro
 
 This project was developed in cooperation with Haosheng Ye, Mohammad Munem, Nandhini Sambasivam, Sam Williams, and Yuchuan Jin.
 
-## How to Run
+# Features
+
+- TODO: add feature list
+- TODO: add screenshots
+
+# Building and Running
+
+Prerequisites:
+
+- TODO: update this
 
 This project uses docker compose for development, testing, and production.
 
@@ -79,28 +88,4 @@ This README provides instructions for setting up the client using Ionic React an
    npx cap sync
    ```
 
-## Running on iOS
-
-1. Open the iOS project in Xcode:
-   ```
-   npx cap open ios
-   ```
-2. Select a simulator or a connected device and click "Run" in Xcode.
-
-Alternatively, run the app directly using:
-   ```
-   npx cap run ios
-   ```
-
-## Running on Android
-
-1. Open the Android project in Android Studio:
-   ```
-   npx cap open android
-   ```
-2. Select an emulator or a connected device and click "Run" in Android Studio.
-Alternatively, run the app directly using:
-   ```
-   npx cap run android
-   ```
-and chose the target device and the app will be built using Gradle and deployed as `app-debug.apk` to the selected device.
+- TODO: add how to run on Android instructions
