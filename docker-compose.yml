@@ -1,54 +1,80 @@
-#   TODO: remove .env from repo and update the README on secrets
+volumes:
+  grocery_data:
+
+networks:
+  project_network:
+
 services:
   db:
-    container_name: db_pg
+    container_name: db
     build:
-      context: ./server/Docker
+      context: ./server/docker
       dockerfile: pgsql.Dockerfile
     profiles:
       - backend
+      - scraper
       - e2e_test
     tty: true
-    image: postgres:17.2
     restart: always
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
+      test: ["CMD", "pg_isready", "-U", "grocery_compare"]
       interval: 1s
+      start_interval: 1s
       timeout: 10s
       retries: 5
     env_file:
       - ./server/.env
     volumes:
-      - ./var/pgdata:/var/lib/postgresql/data
+      - grocery_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
       - project_network
 
+  migrate:
+    container_name: migrate
+    profiles:
+      - migrate
+    tty: true
+    command: npx drizzle-kit push --config ./drizzle.config.ts
+    depends_on:
+      db:
+        condition: service_healthy
+    build:
+      context: ./server
+      dockerfile: ./docker/server.Dockerfile
+    env_file:
+      - ./server/.env
+    networks:
+      - project_network
+
   server:
     container_name: server
-    command: npx nodemon --legacy-watch src/server.ts
+    command: npx ts-node ./src/app.ts
     profiles:
       - backend
-      - e2e_test
+      - e2e_tes
+    depends_on:
+      db:
+        condition: service_healthy
     tty: true
     build:
-      context: server
-      dockerfile: Docker/server.Dockerfile
+      context: ./server
+      dockerfile: docker/server.Dockerfile
     develop:
       watch:
-        - action: rebuild
-          path: ./src
-          target: ./src
+        - action: sync+restart
+          path: ./server/src
+          target: ./server/src
           ignore:
             - node_modules/
+    volumes:
+      - /src:/src
     healthcheck:
       test: ["CMD", "curl", "-f", "http://server:5000"]
       interval: 1s
       timeout: 10s
       retries: 3
-    volumes:
-      - ./src:/src
     ports:
       - "5000:5000"
     env_file:
@@ -88,14 +114,14 @@ services:
     profiles:
       - scraper
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./server
+      dockerfile: docker/server.Dockerfile
     container_name: web_scraper
     volumes:
       - ./src/web-scraping:/src/web-scraping
     env_file:
       - ./server/.env
-    command: ["npm", "run", "scrape"]
+    command: npx ts-node src/web-scraping/main.ts
     networks:
       - project_network
 
@@ -155,7 +181,7 @@ services:
           ignore:
             - node_modules/
     depends_on:
-      db_pg:
+      db:
         condition: service_healthy
       client:
           condition: service_healthy
@@ -164,9 +190,3 @@ services:
       - ./client:/e2e
     networks:
       - project_network
-
-volumes:
-  grocery-compare-db:
-
-networks:
-  project_network:
