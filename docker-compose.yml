@@ -39,6 +39,7 @@ services:
       - app
       - backend
       - migrate
+      - scraper
     tty: true
     command: npx drizzle-kit push --config ./drizzle.config.ts
     depends_on:
