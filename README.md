@@ -12,6 +12,7 @@ To launch a specific profile. For example, the frontend and backend run: `sudo d
 
 Available profiles:
 
+- `app`
 - `backend`
 - `migrate`
 - `frontend`

@@ -11,6 +11,7 @@ services:
       context: ./server/docker
       dockerfile: pgsql.Dockerfile
     profiles:
+      - app
       - backend
       - scraper
       - e2e_test
@@ -35,6 +36,7 @@ services:
   migrate:
     container_name: migrate
     profiles:
+      - app
       - backend
       - migrate
     tty: true
@@ -54,6 +56,7 @@ services:
     container_name: server
     command: npx ts-node ./src/app.ts
     profiles:
+      - app
       - backend
       - e2e_tes
     depends_on:
@@ -141,6 +144,7 @@ services:
   client:
     container_name: client
     profiles:
+      - app
       - frontend
       - e2e_test
     tty: true
